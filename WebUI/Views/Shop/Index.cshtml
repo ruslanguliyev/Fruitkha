@@ -1,0 +1,162 @@
+﻿@model ShopVM
+
+<!-- breadcrumb-section -->
+<div class="breadcrumb-section breadcrumb-bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2 text-center">
+                <div class="breadcrumb-text">
+                    <p>Fresh and Organic</p>
+                    <h1>Shop</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end breadcrumb section -->
+<!-- products -->
+<div class="product-section mt-150 mb-150">
+    <div class="container">
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="product-filters">
+                    <ul>
+                        <form method="get"> 
+                               <li class="active"><a asp-controller="Shop" asp-action="Index">All</a></li>
+                        @foreach (var category in Model.Categories)
+                        {
+                       <li>
+                           <a>
+                               <label for="cat_@category.Id">
+                                   <input id="cat_@category.Id" type="radio" name="categoryId" value="@category.Id" />
+                                   @category.Name
+                               </label>
+                           </a>
+                           
+                           
+                       </li>
+                        }
+                        
+                        <input type="number" name="minPrice" placeholder="Min price"/>
+                        <input type="number" name="maxPrice" placeholder="Max price"/>
+                        <input type="submit" value="Filter" />
+                        </form>
+                      
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row product-lists">
+            @foreach (var product in Model.Products)
+            {
+                <div id="cart_@product.Id" class="col-lg-4 col-md-6 text-center">
+                    <div class="single-product-item">
+                        <div class="product-image">
+                            <a asp-controller="product" asp-action="detail" asp-route-id="@product.Id"><img width="200" height="200" src="@product.PhotoUrl" alt="@product.Name"></a>
+                        </div>
+                        <h3 class="productName">@product.Name</h3>
+                        <p class="product-price"><span>Per Kg</span><p class="product-price productPrice"> @product.Price $</p> </p>
+                        <a onclick="addToCart(@product.Id)" class="cart-btn addToCart"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
+                    </div>
+                </div>
+            }
+        </div>
+            
+
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="pagination-wrap">
+                    <ul>
+                        <li><a href="#">Prev</a></li>
+                        <li><a href="#">1</a></li>
+                        <li><a class="active" href="#">2</a></li>
+                        <li><a href="#">3</a></li>
+                        <li><a href="#">Next</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end products -->
+<!-- logo carousel -->
+<div class="logo-carousel-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="logo-carousel-inner">
+                    <div class="single-logo-item">
+                        <img src="assets/img/company-logos/1.png" alt="">
+                    </div>
+                    <div class="single-logo-item">
+                        <img src="assets/img/company-logos/2.png" alt="">
+                    </div>
+                    <div class="single-logo-item">
+                        <img src="assets/img/company-logos/3.png" alt="">
+                    </div>
+                    <div class="single-logo-item">
+                        <img src="assets/img/company-logos/4.png" alt="">
+                    </div>
+                    <div class="single-logo-item">
+                        <img src="assets/img/company-logos/5.png" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end logo carousel -->
+@section Scripts{
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+        function getCookie(name){
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if(parts.length ===2) return parts.pop().split(';').shift();
+        }
+        if(getCookie("products") == null){
+            document.cookie = "products=" + JSON.stringify("")
+        }
+        let addButton = document.getElementsByClassName("addToCart")
+
+        let cookieArray = [cookieTest]
+
+        function addToCart(productId){
+            let cookieTest = JSON.parse(getCookie("products"))
+            let productCart = document.getElementById(`cart_${productId}`)
+            let id = productId
+            let image = productCart.getElementsByTagName("img")[0].currentSrc
+            let price = productCart.getElementsByClassName("productPrice")[0].innerText
+
+            let name = productCart.getElementsByClassName("productName")[0].innerText
+            let cartItem = {id: id, image: image, price: parseFloat(price.replace(" $", '')), name: name,quantity: 1 }
+            var expires = "";
+             var date = new Date();
+              date.setTime(date.getTime() + (22460601000));
+             expires = "; expires=" + date.toUTCString();
+            let findId = cookieTest.length != 0 ? cookieTest.filter(x => x.id == productId) : []
+            if(findId.length != 0){
+                cookieTest.filter(x=>x.id == productId).map(x=>{
+                    x.quantity += 1
+                })
+                document.cookie = "products=" + JSON.stringify(cookieTest)+expires
+            }else{
+                document.cookie = "products=" + JSON.stringify([...cookieTest, cartItem])+expires
+            }
+            Swal.fire({
+           position: 'top-center',
+           icon: 'success',
+           title: `${name} is added to cart`,
+           showConfirmButton: false,
+           timer: 1500
+    })
+
+        }
+
+        //cookieTest.filter(x=x.id == 5).map(x=>{
+        //    x.quantity += 1
+        //})
+</script>
+
+}

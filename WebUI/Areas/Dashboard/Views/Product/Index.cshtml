@@ -1,0 +1,89 @@
+﻿@model IEnumerable<Product>
+<a href="/dashboard/product/create" class="btn btn-success btn-icon-split">
+    <span class="icon text-white-50">
+        <i class="fas fa-plus"></i>
+    </span>
+    <span class="text">Create</span>
+</a>
+
+<!-- DataTales Example -->
+<div class="card shadow my-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Discount</th>
+                        <th>Photo</th>
+                        <th>IsSlider</th>
+                        <th>IsDelete</th>
+
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Discount</th>
+                        <th>Photo</th>
+                        <th>IsSlider</th>
+                        <th>IsDelete</th>
+
+                    </tr>
+                </tfoot>
+                <tbody>
+                    @foreach (var product in Model)
+                    {
+                        <tr>
+                            <td>@product.Name</td>
+                            <td>@product.Price</td>
+                            <td>@product.Quantity</td>
+                            <td>@product.Discount</td>
+                            <td>
+                                <img src="@product.CoverPhoto" width="150" height="150" />
+                            </td>
+                            <td>
+                                @{
+                                    if (product.IsSlider)
+                                    {
+                                        <button class="btn btn-outline-success">+</button>
+                                    }
+                                    else
+                                    {
+                                        <button class="btn btn-outline-danger">-</button>
+                                    }
+                                }
+                            </td>
+                            <td>
+                                @{
+                                    if (product.IsSlider)
+                                    {
+                                        <button class="btn btn-outline-success">+</button>
+                                    }
+                                    else
+                                    {
+                                        <button class="btn btn-outline-danger">-</button>
+                                    }
+                                }
+                            </td>
+                            <td>
+
+                                <a class="btn btn-outline-danger btn-sm"  href="/dashboard/product/Delete/@product.Id">Delete</a>
+                                <a class="btn btn-outline-warning btn-sm" href="/dashboard/product/Update/@product.Id">Update</a>
+                                <a class="btn btn-outline-danger btn-sm" href="/dashboard/product/Restore/@product.Id">Restore</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
